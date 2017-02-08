@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="sort_menu">Sort</string>
+    <string name="sort_by_title">Sort by</string>
+    <string name="top_rated">Top rated movies</string>
+    <string name="popular_movies">Popular movies</string>
+    <string name="accept_button">Accept</string>
+    <string name="cancel_button">Cancel</string>
+
+    <array name="sort_options">
+        <item>Popular movies</item>
+        <item>Top rated movies</item>
+    </array>
+
+    <string name="rating">Rating</string>
+    <string name="duration">Duration</string>
+    <string name="release_date">Release date</string>
+
+    <string name="movie_poster_desc">Movie poster</string>
+    <string name="movie_poster_back_desc">Background movie poster</string>
+    <string name="minutes">minutes</string>
+    <string name="no_network_message">Seems there are not networks available. Please check your network connections and try again.</string>
+    <string name="no_internet_message">Seems there are not internet connection at this time. Please check your network connections and try again.</string>
+    <string name="no_network_title">Network problems</string>
+    <string name="no_internet_title">Internet problems</string>
+    <string name="error_title">Error</string>
+    <string name="error_message">Ops! This is embarrassing. Looks like something went wrong. Re-open the app and try again.</string>
+    <string name="exit_app_button">Exit app</string>
+    <string name="reload_results">Reload results</string>
+</resources>
