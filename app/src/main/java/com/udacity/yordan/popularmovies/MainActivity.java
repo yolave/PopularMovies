@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 
 import com.udacity.yordan.popularmovies.biz.MoviesBO;
 import com.udacity.yordan.popularmovies.biz.impl.MoviesBOImpl;
+import com.udacity.yordan.popularmovies.exceptions.PopularMoviesExceptionHandler;
 import com.udacity.yordan.popularmovies.json.Result;
 import com.udacity.yordan.popularmovies.utilities.NetworkUtils;
 import com.udacity.yordan.popularmovies.view.PopularMoviesAdapter;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new PopularMoviesExceptionHandler(this));
         setContentView(R.layout.activity_main);
 
         mProgressBar = (ProgressBar)findViewById(R.id.pb_loading);
@@ -56,21 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void performMovieFetch(Integer option){
-        try {
-            new MovieFetchCallTask().execute(option);
-        }
-        catch (Exception e){
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.error_title)
-                    .setMessage(R.string.error_message)
-                    .setPositiveButton(R.string.exit_app_button, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })
-                    .show();
-        }
+        new MovieFetchCallTask().execute(option);
     }
 
     private void showError(){
@@ -159,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private class MovieFetchCallTask extends AsyncTask<Integer, Void, RecyclerView.Adapter> {
         private final MoviesBO moviesBO = new MoviesBOImpl();
+        private final String TAG = getClass().getSimpleName();
 
         @Override
         protected RecyclerView.Adapter doInBackground(Integer... params) {
@@ -166,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             List<Result> result;
             switch (params[0]) {
                 case MainActivity.POPULAR_MOVIES_OPTION:
-                    if(!NetworkUtils.isOnline(NetworkUtils.buildGetPopularMoviesUrl())){
+                    if(!NetworkUtils.isOnline()){
                         new AlertDialog.Builder(MainActivity.this)
                                 .setTitle(R.string.no_internet_title)
                                 .setMessage(R.string.no_internet_message)
@@ -178,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     adapter = new PopularMoviesAdapter(result,MainActivity.this);
                     break;
                 case MainActivity.TOP_RATED_MOVIES_OPTION:
-                    if(!NetworkUtils.isOnline(NetworkUtils.buildGetTopRatedMoviesUrl())){
+                    if(!NetworkUtils.isOnline()){
                         new AlertDialog.Builder(MainActivity.this)
                                 .setTitle(R.string.no_internet_title)
                                 .setMessage(R.string.no_internet_message)

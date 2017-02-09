@@ -25,8 +25,10 @@ public class NetworkUtils {
     /**
      * Base URL to connect to themoviedb.org
      */
-    final private static String MOVIE_DB_URL =
+    private static final String MOVIE_DB_URL =
             "https://api.themoviedb.org/3/movie";
+
+    private static final String MOVIE_DB_BASE_URL = "https://www.themoviedb.org";
 
     final private static String POSTER_BASE_URL = "http://image.tmdb.org/t/p";
 
@@ -74,21 +76,29 @@ public class NetworkUtils {
      */
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        String response = null;
         try {
-            InputStream in = urlConnection.getInputStream();
+            switch (urlConnection.getResponseCode()){
+                case 200:
+                    InputStream in = urlConnection.getInputStream();
 
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
+                    Scanner scanner = new Scanner(in);
+                    scanner.useDelimiter("\\A");
 
-            boolean hasInput = scanner.hasNext();
-            if (hasInput) {
-                return scanner.next();
-            } else {
-                return null;
+                    boolean hasInput = scanner.hasNext();
+                    if (hasInput) {
+                        response = scanner.next();
+                    }
+                    break;
+                case 401:
+                    throw new RuntimeException("Invalid API key: You must be granted a valid key");
+                case 404:
+                    throw new RuntimeException("The resource you requested could not be found");
             }
         } finally {
             urlConnection.disconnect();
         }
+        return response;
     }
 
     /**
@@ -98,10 +108,10 @@ public class NetworkUtils {
      * @param params params to construct the query
      * @return The URL to use to query the server
      */
-    private static URL buildUrl(final String baseUrl, final Map<String,String> params){
-//        if(!params.containsValue(API_KEY)){
-//            throw new RuntimeException("No api key informed. Check the JVM parameters (-dapi_key=YOUR_API_KEY)");
-//        }
+    public static URL buildUrl(final String baseUrl, final Map<String,String> params){
+        if(params != null && params.containsKey(PARAM_API) && (params.get(PARAM_API) == null || params.get(PARAM_API).isEmpty())){
+            throw new RuntimeException("No api key informed. Check your gradle.properties file (API_KEY=YOUR_API_KEY)");
+        }
 
         Uri.Builder builder =
                 Uri.parse(baseUrl).buildUpon();
@@ -161,19 +171,19 @@ public class NetworkUtils {
      * Checks if there's internet connection available.
      * @return true if there's internet connection, false in other case.
      */
-    public static boolean isOnline() {
-
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 216.58.210.174");
-            int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-
-        } catch (IOException e)          { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
-
-        return true;
-    }
+//    public static boolean isOnline() {
+//
+//        Runtime runtime = Runtime.getRuntime();
+//        try {
+//            Process ipProcess = runtime.exec("/system/bin/ping -c 1 216.58.210.174");
+//            int     exitValue = ipProcess.waitFor();
+//            return (exitValue == 0);
+//
+//        } catch (IOException e)          { e.printStackTrace(); }
+//        catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        return true;
+//    }
 
     public static boolean isOnline(@NonNull URL url){
         boolean result = false;
@@ -182,8 +192,33 @@ public class NetworkUtils {
         try {
             conn = (HttpURLConnection)url.openConnection();
             conn.connect();
-            is = conn.getInputStream();
-            if(is!=null){
+            if(conn.getResponseCode() == 200) {
+                result = true;
+            }
+        }
+        catch (IOException ignored){}
+        finally {
+            if(conn != null){
+                conn.disconnect();
+            }
+            if(is != null){
+                try {
+                    is.close();
+                } catch (IOException ignored) {}
+            }
+        }
+        return result;
+    }
+
+    public static boolean isOnline(){
+        boolean result = false;
+        HttpURLConnection conn = null;
+        InputStream is = null;
+        URL url = buildUrl(MOVIE_DB_BASE_URL,null);
+        try {
+            conn = (HttpURLConnection)url.openConnection();
+            conn.connect();
+            if(conn.getResponseCode() == 200) {
                 result = true;
             }
         }
@@ -208,11 +243,11 @@ public class NetworkUtils {
      */
     public static URL buildMoviePosterUrl(final String path){
         return buildUrl(new StringBuilder(POSTER_BASE_URL)
-                .append('/')
-                .append(POSTER_DEFAULT_SIZE)
-                .append('/')
-                .append(path)
-                .toString()
+                        .append('/')
+                        .append(POSTER_DEFAULT_SIZE)
+                        .append('/')
+                        .append(path)
+                        .toString()
                 ,null);
     }
 

@@ -24,7 +24,7 @@
     <string name="no_network_title">Network problems</string>
     <string name="no_internet_title">Internet problems</string>
     <string name="error_title">Error</string>
-    <string name="error_message">Ops! This is embarrassing. Looks like something went wrong. Re-open the app and try again.</string>
+    <string name="error_message">Ops! This is embarrassing. Looks like something went wrong. Re-open the app and try again (problem reported: %s).</string>
     <string name="exit_app_button">Exit app</string>
     <string name="reload_results">Reload results</string>
 </resources>

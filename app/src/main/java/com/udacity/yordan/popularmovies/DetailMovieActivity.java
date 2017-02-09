@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.udacity.yordan.popularmovies.biz.MoviesBO;
 import com.udacity.yordan.popularmovies.biz.impl.MoviesBOImpl;
+import com.udacity.yordan.popularmovies.exceptions.PopularMoviesExceptionHandler;
 import com.udacity.yordan.popularmovies.json.MovieDetailResp;
 import com.udacity.yordan.popularmovies.utilities.NetworkUtils;
 
@@ -35,6 +36,7 @@ public class DetailMovieActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new PopularMoviesExceptionHandler(this));
         setContentView(R.layout.activity_detail_movie);
 
         mMovieTitle = (TextView)findViewById(R.id.tv_movie_title);
