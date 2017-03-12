@@ -26,15 +26,21 @@ import com.udacity.yordan.popularmovies.view.TopRatedMoviesAdapter;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private int selectedItem = 0;
     private static final int POPULAR_MOVIES_OPTION = 0;
     private static final int TOP_RATED_MOVIES_OPTION = 1;
     private static final int SPAN_COUNT = 2;
-    private RecyclerView mMovieList;
-    private ProgressBar mProgressBar;
-    private ImageView mReloadButton;
+    @BindView(R.id.rv_movies)
+    RecyclerView mMovieList;
+    @BindView(R.id.pb_loading)
+    ProgressBar mProgressBar;
+    @BindView(R.id.ib_reload)
+    ImageButton mReloadButton;
 //    private TextView mErrorMessage;
 
 
@@ -43,11 +49,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new PopularMoviesExceptionHandler(this));
         setContentView(R.layout.activity_main);
-
-        mProgressBar = (ProgressBar)findViewById(R.id.pb_loading);
-        mMovieList = (RecyclerView) findViewById(R.id.rv_movies);
+        ButterKnife.bind(this);
+//        mProgressBar = (ProgressBar)findViewById(R.id.pb_loading);
+//        mMovieList = (RecyclerView) findViewById(R.id.rv_movies);
 //        mErrorMessage = (TextView) findViewById(R.id.tv_error_message);
-        mReloadButton = (ImageButton)findViewById(R.id.ib_reload);
+//        mReloadButton = (ImageButton)findViewById(R.id.ib_reload);
         mReloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

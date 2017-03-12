@@ -6,7 +6,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -19,37 +18,39 @@ import com.udacity.yordan.popularmovies.exceptions.PopularMoviesExceptionHandler
 import com.udacity.yordan.popularmovies.json.MovieDetailResp;
 import com.udacity.yordan.popularmovies.utilities.NetworkUtils;
 
-public class DetailMovieActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    private TextView mMovieTitle;
-    private TextView mTagline;
-    private TextView mReleaseDate;
-    private TextView mRating;
-    private TextView mDuration;
-    private TextView mSynopsis;
-    private ImageView mPosterBg;
-    private ImageView mPoster;
-    private ProgressBar mProgressBar;
-    private ScrollView mInnerMovieDetail;
-    private ImageView mReloadButton;
+public class DetailMovieActivity extends AppCompatActivity {
+    @BindView(R.id.tv_movie_title)
+    TextView mMovieTitle;
+    @BindView(R.id.tv_tagline)
+    TextView mTagline;
+    @BindView(R.id.tv_release_date)
+    TextView mReleaseDate;
+    @BindView(R.id.tv_user_rating)
+    TextView mRating;
+    @BindView(R.id.tv_duration)
+    TextView mDuration;
+    @BindView(R.id.tv_synopsis)
+    TextView mSynopsis;
+    @BindView(R.id.iv_detail_poster_back)
+    ImageView mPosterBg;
+    @BindView(R.id.iv_detail_poster)
+    ImageView mPoster;
+    @BindView(R.id.pb_loading)
+    ProgressBar mProgressBar;
+    @BindView(R.id.sv_inner_movie_detail)
+    ScrollView mInnerMovieDetail;
+    @BindView(R.id.ib_reload)
+    ImageView mReloadButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new PopularMoviesExceptionHandler(this));
         setContentView(R.layout.activity_detail_movie);
-
-        mMovieTitle = (TextView)findViewById(R.id.tv_movie_title);
-        mTagline = (TextView)findViewById(R.id.tv_tagline);
-        mReleaseDate = (TextView)findViewById(R.id.tv_release_date);
-        mRating = (TextView)findViewById(R.id.tv_user_rating);
-        mDuration = (TextView)findViewById(R.id.tv_duration);
-        mPosterBg = (ImageView)findViewById(R.id.iv_detail_poster_back);
-        mPoster = (ImageView)findViewById(R.id.iv_detail_poster);
-        mSynopsis = (TextView)findViewById(R.id.tv_synopsis);
-        mInnerMovieDetail = (ScrollView)findViewById(R.id.sv_inner_movie_detail);
-        mProgressBar = (ProgressBar)findViewById(R.id.pb_loading);
-        mReloadButton = (ImageButton)findViewById(R.id.ib_reload);
+        ButterKnife.bind(this);
         mReloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
