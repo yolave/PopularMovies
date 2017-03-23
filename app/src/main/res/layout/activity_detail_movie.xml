@@ -7,20 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.udacity.yordan.popularmovies.DetailMovieActivity">
 
-    <!--<ImageView
-        app:srcCompat="@android:drawable/btn_star_big_on"
-        android:id="@+id/iv_detail_poster_back"
-        android:scaleType="centerCrop"
-        android:layout_width="0dp"
-        android:contentDescription="@string/movie_poster_back_desc"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_height="160dp" />-->
-
-    <ImageView
+     <ImageView
         android:id="@+id/iv_detail_poster_back"
         android:scaleType="centerCrop"
         android:layout_width="0dp"
@@ -32,6 +19,18 @@
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintLeft_creator="1"
         android:layout_height="160dp" />
+
+    <ImageView
+        android:id="@+id/iv_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="4dp"
+        android:contentDescription="@string/label_favorite_content_description"
+        android:elevation="4dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:text="${originalTitle}"
@@ -69,8 +68,15 @@
         android:layout_marginBottom="16dp"
         app:layout_constraintVertical_bias="0.0"
         android:id="@+id/sv_inner_movie_detail">
-        <include layout="@layout/inner_detail_movie">
-        </include>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include layout="@layout/inner_detail_movie" />
+            <include layout="@layout/video_section" />
+            <include layout="@layout/reviews_section" />
+        </LinearLayout>
+
 
     </ScrollView>
 
@@ -97,4 +103,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

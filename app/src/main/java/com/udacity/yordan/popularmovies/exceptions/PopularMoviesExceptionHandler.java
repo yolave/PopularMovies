@@ -1,12 +1,10 @@
 package com.udacity.yordan.popularmovies.exceptions;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
-import com.udacity.yordan.popularmovies.MainActivity;
 import com.udacity.yordan.popularmovies.R;
 
 /**

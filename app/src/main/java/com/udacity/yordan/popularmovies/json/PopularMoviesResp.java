@@ -1,8 +1,9 @@
 package com.udacity.yordan.popularmovies.json;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class PopularMoviesResp {
 
@@ -11,7 +12,7 @@ public class PopularMoviesResp {
     private Integer page;
     @SerializedName("results")
     @Expose
-    private List<Result> results = null;
+    private List<ResultPopularMovie> resultPopularMovies = null;
     @SerializedName("total_results")
     @Expose
     private Integer totalResults;
@@ -27,12 +28,12 @@ public class PopularMoviesResp {
         this.page = page;
     }
 
-    public List<Result> getResults() {
-        return results;
+    public List<ResultPopularMovie> getResultPopularMovies() {
+        return resultPopularMovies;
     }
 
-    public void setResults(List<Result> results) {
-        this.results = results;
+    public void setResultPopularMovies(List<ResultPopularMovie> resultPopularMovies) {
+        this.resultPopularMovies = resultPopularMovies;
     }
 
     public Integer getTotalResults() {

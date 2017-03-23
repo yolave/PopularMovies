@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.yordan.popularmovies.R;
-import com.udacity.yordan.popularmovies.json.Result;
+import com.udacity.yordan.popularmovies.json.ResultPopularMovie;
 import com.udacity.yordan.popularmovies.utilities.NetworkUtils;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Yordan on 1/27/2017.
  */
 public class PopularMoviesAdapter extends RecyclerView.Adapter<PopularMoviesAdapter.ViewHolder> {
-    private final List<Result> mPopularMoviesRespList;
+    private final List<ResultPopularMovie> mPopularMoviesRespList;
     private View.OnClickListener mListener;
 
     @Override
@@ -40,11 +40,11 @@ public class PopularMoviesAdapter extends RecyclerView.Adapter<PopularMoviesAdap
                 .into(holder.mMoviePoster);
     }
 
-    public PopularMoviesAdapter(List<Result> popularMoviesRespList){
+    public PopularMoviesAdapter(List<ResultPopularMovie> popularMoviesRespList){
         this.mPopularMoviesRespList = popularMoviesRespList;
     }
 
-    public PopularMoviesAdapter(List<Result> popularMoviesRespList, View.OnClickListener listener){
+    public PopularMoviesAdapter(List<ResultPopularMovie> popularMoviesRespList, View.OnClickListener listener){
         this.mPopularMoviesRespList = popularMoviesRespList;
         this.mListener = listener;
     }

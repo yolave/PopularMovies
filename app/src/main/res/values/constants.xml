@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="MOVIE_ID_TAG">movieId</string>
+    <string name="MOVIE_ID_TAG" translatable="false">movieId</string>
+    <string name="SELECTED_OPTION_KEY" translatable="false">selectedOption</string>
 </resources>

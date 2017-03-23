@@ -1,8 +1,14 @@
 package com.udacity.yordan.popularmovies.biz;
 
+import android.database.Cursor;
+
 import com.udacity.yordan.popularmovies.json.MovieDetailResp;
+import com.udacity.yordan.popularmovies.json.MovieVideoResp;
 import com.udacity.yordan.popularmovies.json.PopularMoviesResp;
+import com.udacity.yordan.popularmovies.json.ReviewsMovieResp;
 import com.udacity.yordan.popularmovies.json.TopRatedMoviesResp;
+
+import java.util.List;
 
 /**
  * Contract that define the operations that a user can perform.
@@ -27,4 +33,10 @@ public interface MoviesBO {
      * @return Object populated with the selected movie data
      */
     MovieDetailResp getMovieDetail(Integer movieId);
+
+    MovieVideoResp getMovieVideos(Integer movieId);
+
+    ReviewsMovieResp getMovieReviews(Integer movieId);
+
+    List<MovieDetailResp> getFavoritesMovies(Cursor cursor);
 }

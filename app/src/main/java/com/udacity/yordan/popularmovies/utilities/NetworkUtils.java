@@ -25,8 +25,8 @@ public class NetworkUtils {
     /**
      * Base URL to connect to themoviedb.org
      */
-    private static final String MOVIE_DB_URL =
-            "https://api.themoviedb.org/3/movie";
+    public static final String MOVIE_DB_URL =
+            "https://api.themoviedb.org/3/movie/";
 
     private static final String MOVIE_DB_BASE_URL = "https://www.themoviedb.org";
 
@@ -36,11 +36,15 @@ public class NetworkUtils {
     /**
      * Part of the URL to append in order to get the top rated movies
      */
-    final private static String TOP_RATED_MOVIES_SECTION = "/top_rated";
+    final private static String TOP_RATED_MOVIES_SECTION = "top_rated";
     /**
      * Part of the URL to append in order to get the most popular movies
      */
-    final private static String POPULAR_MOVIES_SECTION = "/popular";
+    final private static String POPULAR_MOVIES_SECTION = "popular";
+
+    final private static String REVIEWS_MOVIE = "reviews";
+
+    final private static String VIDEOS_MOVIE = "videos";
     /**
      * Parameter to construct the URL: api_key
      */
@@ -49,7 +53,7 @@ public class NetworkUtils {
      * App API key to make the calls to themoviedb.org site. It's setted on gradle.properties file, so avoid writing this explicitly in
      * any part of the code. For test purposes only.
      */
-    private static final String API_KEY = BuildConfig.API_KEY;
+    public static final String API_KEY = BuildConfig.API_KEY;
     /**
      * Parameter to construct the URL: language
      */
@@ -66,6 +70,10 @@ public class NetworkUtils {
      * Default value for the "page" param
      */
     final private static String VALUE_PAGE = "1";
+    /**
+     *
+     */
+    private static final String YOUTUBE_THUMBNAIL_WILDCARD_URL = "https://img.youtube.com/vi/%s/hqdefault.jpg";
 
     /**
      * This method returns the entire result from the HTTP response.
@@ -140,7 +148,7 @@ public class NetworkUtils {
         params.put(PARAM_API,API_KEY);
         params.put(PARAM_LANGUAGE,VALUE_LANGUAGE);
         params.put(PARAM_PAGE,VALUE_PAGE);
-        return buildUrl(new StringBuilder(MOVIE_DB_URL).append(POPULAR_MOVIES_SECTION).toString(),params);
+        return buildUrl(MOVIE_DB_URL + POPULAR_MOVIES_SECTION,params);
     }
 
     /**
@@ -152,7 +160,7 @@ public class NetworkUtils {
         params.put(PARAM_API,API_KEY);
         params.put(PARAM_LANGUAGE,VALUE_LANGUAGE);
         params.put(PARAM_PAGE,VALUE_PAGE);
-        return buildUrl(new StringBuilder(MOVIE_DB_URL).append(TOP_RATED_MOVIES_SECTION).toString(),params);
+        return buildUrl(MOVIE_DB_URL + TOP_RATED_MOVIES_SECTION,params);
     }
 
     /**
@@ -164,31 +172,27 @@ public class NetworkUtils {
         Map<String,String> params = new HashMap<>(0);
         params.put(PARAM_API,API_KEY);
         params.put(PARAM_LANGUAGE,VALUE_LANGUAGE);
-        return buildUrl(new StringBuilder(MOVIE_DB_URL).append('/').append(movieId).toString(),params);
+        return buildUrl(MOVIE_DB_URL + movieId,params);
     }
 
-    /**
-     * Checks if there's internet connection available.
-     * @return true if there's internet connection, false in other case.
-     */
-//    public static boolean isOnline() {
-//
-//        Runtime runtime = Runtime.getRuntime();
-//        try {
-//            Process ipProcess = runtime.exec("/system/bin/ping -c 1 216.58.210.174");
-//            int     exitValue = ipProcess.waitFor();
-//            return (exitValue == 0);
-//
-//        } catch (IOException e)          { e.printStackTrace(); }
-//        catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        return true;
-//    }
+    public static URL buildReviewsMovieUrl(final String movieId){
+        Map<String,String> params = new HashMap<>(0);
+        params.put(PARAM_API,API_KEY);
+        params.put(PARAM_LANGUAGE,VALUE_LANGUAGE);
+        return buildUrl(MOVIE_DB_URL + movieId + '/' + REVIEWS_MOVIE,params);
+    }
+
+    public static URL buildVideosMovieUrl(final String movieId){
+        Map<String,String> params = new HashMap<>(0);
+        params.put(PARAM_API,API_KEY);
+        params.put(PARAM_LANGUAGE,VALUE_LANGUAGE);
+        return buildUrl(MOVIE_DB_URL + movieId + '/' + VIDEOS_MOVIE,params);
+    }
 
     public static boolean isOnline(@NonNull URL url){
         boolean result = false;
         HttpURLConnection conn = null;
-        InputStream is = null;
+
         try {
             conn = (HttpURLConnection)url.openConnection();
             conn.connect();
@@ -200,11 +204,6 @@ public class NetworkUtils {
         finally {
             if(conn != null){
                 conn.disconnect();
-            }
-            if(is != null){
-                try {
-                    is.close();
-                } catch (IOException ignored) {}
             }
         }
         return result;
@@ -213,8 +212,8 @@ public class NetworkUtils {
     public static boolean isOnline(){
         boolean result = false;
         HttpURLConnection conn = null;
-        InputStream is = null;
         URL url = buildUrl(MOVIE_DB_BASE_URL,null);
+
         try {
             conn = (HttpURLConnection)url.openConnection();
             conn.connect();
@@ -226,11 +225,6 @@ public class NetworkUtils {
         finally {
             if(conn != null){
                 conn.disconnect();
-            }
-            if(is != null){
-                try {
-                    is.close();
-                } catch (IOException ignored) {}
             }
         }
         return result;
@@ -242,12 +236,11 @@ public class NetworkUtils {
      * @return
      */
     public static URL buildMoviePosterUrl(final String path){
-        return buildUrl(new StringBuilder(POSTER_BASE_URL)
-                        .append('/')
-                        .append(POSTER_DEFAULT_SIZE)
-                        .append('/')
-                        .append(path)
-                        .toString()
+        return buildUrl(POSTER_BASE_URL +
+                        '/' +
+                        POSTER_DEFAULT_SIZE +
+                        '/' +
+                        path
                 ,null);
     }
 
@@ -267,5 +260,9 @@ public class NetworkUtils {
             }
         }
         return rdo;
+    }
+
+    public static String generateYoutubeImageThumbUrl(@NonNull String key){
+        return String.format(YOUTUBE_THUMBNAIL_WILDCARD_URL,key);
     }
 }
