@@ -10,27 +10,21 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.udacity.yordan.popularmovies.MainActivity">
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/rv_movies"
         android:scrollbars="vertical">
     </android.support.v7.widget.RecyclerView>
+
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/pb_loading"
         android:layout_gravity="center"
         android:visibility="invisible" />
-    <!--<TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:layout_gravity="center"
-        android:textSize="18sp"
-        android:textStyle="bold|italic"
-        android:id="@+id/tv_error_message"
-        />-->
+
     <ImageButton
         android:layout_width="64dp"
         android:layout_height="64dp"
@@ -41,4 +35,13 @@
         android:visibility="invisible"
         android:scaleType="centerCrop"
         android:contentDescription="@string/reload_results"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_no_movies"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+        android:layout_gravity="center"
+        android:text="@string/message_no_favorites_movies"
+        android:visibility="invisible"/>
 </FrameLayout>

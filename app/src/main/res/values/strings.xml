@@ -10,6 +10,7 @@
     <array name="sort_options">
         <item>Popular movies</item>
         <item>Top rated movies</item>
+        <item>Favorites</item>
     </array>
 
     <string name="rating">Rating</string>
@@ -26,5 +27,22 @@
     <string name="error_title">Error</string>
     <string name="error_message">Ops! This is embarrassing. Looks like something went wrong. Re-open the app and try again (problem reported: %s).</string>
     <string name="exit_app_button">Exit app</string>
-    <string name="reload_results">Reload results</string>
+    <string name="reload_results">Reload resultPopularMovies</string>
+
+    <string name="label_videos">Videos</string>
+    <string name="label_reviews">Reviews</string>
+    <string name="label_favorite_content_description">Mark this movie as favorite</string>
+
+    <string name="movie_video_desc">Video from movie</string>
+    <string name="movie_watch">Watch</string>
+    <string name="content_description_user">User icon who wrote the review</string>
+    <string name="label_no_reviews">No reviews available</string>
+    <string name="label_no_videos">No videos available</string>
+
+    <string name="confirmation_movie_added_fav">The movie was added to favorites</string>
+    <string name="confirmation_movie_removed_fav">The movie was removed from favorites</string>
+    <string name="message_no_favorites_movies">No favorite movies added yet. Add a movie as favorite to be listed by here!</string>
+    <string name="message_error_add_fav">Something went wrong trying to add the movie to favorites</string>
+    <string name="content_description_share_video">Share this video</string>
+    <string name="label_share">Share</string>
 </resources>

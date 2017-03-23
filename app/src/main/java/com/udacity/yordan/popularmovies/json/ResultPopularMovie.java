@@ -1,10 +1,11 @@
 package com.udacity.yordan.popularmovies.json;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Result {
+import java.util.List;
+
+public class ResultPopularMovie {
 
     @SerializedName("poster_path")
     @Expose
