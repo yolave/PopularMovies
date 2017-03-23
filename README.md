@@ -1,10 +1,14 @@
 # PopularMovies
-Popular movies Stage 1 project
+Popular movies Stage 2 project
 
 The objective of this app is call to www.themoviedb.org site and retrieve (using API rest services):
+
 - Popular list movies
 - Top rated movies
 - Detail of a specific movie
+- Get the movie trailers related with
+- Get the movie reviews published by the users
+- Display user's favorite movies using a local content provider to persist the data
 
 In order to use this app, is necessary first config the gradle.properties file (or add it if Android Studio doesn't do it automatically) with your API Key obtained at www.themoviedb.org previously (If you don’t already have an account, you will need to create one in order to request an API Key. Go to https://www.themoviedb.org/account/signup, fill the form and follow the instructions)
 
