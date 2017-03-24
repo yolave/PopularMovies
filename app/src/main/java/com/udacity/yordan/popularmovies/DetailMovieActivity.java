@@ -1,12 +1,16 @@
 package com.udacity.yordan.popularmovies;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
-import android.database.Cursor;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +28,7 @@ import com.udacity.yordan.popularmovies.biz.MoviesBO;
 import com.udacity.yordan.popularmovies.biz.impl.MoviesBOImpl;
 import com.udacity.yordan.popularmovies.data.FavoriteMoviesContract;
 import com.udacity.yordan.popularmovies.exceptions.PopularMoviesExceptionHandler;
+import com.udacity.yordan.popularmovies.intents.FavMoviesIntentService;
 import com.udacity.yordan.popularmovies.json.MovieDetailResp;
 import com.udacity.yordan.popularmovies.json.MovieVideoResp;
 import com.udacity.yordan.popularmovies.json.ReviewsMovieResp;
@@ -82,6 +87,8 @@ public class DetailMovieActivity extends AppCompatActivity {
     private LoaderManager.LoaderCallbacks<ReviewsMovieResp> reviewsLoader;
     private LoaderManager.LoaderCallbacks<MovieVideoResp> videosLoader;
 
+    private ResponseReceiver receiver;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,64 +111,25 @@ public class DetailMovieActivity extends AppCompatActivity {
         getMovieReviews();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager.unregisterReceiver(receiver);
+    }
 
     private void initFavImage(){
         String stringId = movieId.toString();
-        final Uri uri = FavoriteMoviesContract.FavoriteEntry.CONTENT_URI.buildUpon().appendPath(stringId).build();
 
-        Cursor cursor = getContentResolver().query(uri
-                ,null
-                ,null
-                ,null
-                ,null);
+        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        receiver = new ResponseReceiver();
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager.registerReceiver(receiver,filter);
 
-        isFav = cursor != null && cursor.getCount() > 0;
-        if(cursor != null){
-            cursor.close();
-        }
-        //If movie is marked as favorite
-        if(isFav){
-            //Favorite image as default
-            mIvFavorite.setImageResource(R.drawable.ic_favorite_white_24dp);
-        }
-        //If not...
-        else {
-            //Unfavorite image as default
-            mIvFavorite.setImageResource(R.drawable.ic_favorite_border_white_24dp);
-        }
-
-        mIvFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isFav){
-                    getContentResolver().delete(uri
-                            ,null
-                            ,null);
-                    mIvFavorite.setImageResource(R.drawable.ic_favorite_border_white_24dp);
-                    isFav = false;
-                }
-                else {
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put(FavoriteMoviesContract.FavoriteEntry.COLUMN_MOVIE_ID, movieId);
-                    contentValues.put(FavoriteMoviesContract.FavoriteEntry.COLUMN_TITLE, mMovieTitle.getText().toString());
-
-                    Uri uri = getContentResolver().insert(FavoriteMoviesContract.FavoriteEntry.CONTENT_URI, contentValues);
-
-                    if(uri != null) {
-                        mIvFavorite.setImageResource(R.drawable.ic_favorite_white_24dp);
-                        Toast.makeText(DetailMovieActivity.this
-                                ,getString(R.string.confirmation_movie_added_fav)
-                                ,Toast.LENGTH_LONG).show();
-                        isFav = true;
-                    }
-                    else {
-                        Toast.makeText(DetailMovieActivity.this
-                                ,getString(R.string.message_error_add_fav)
-                                ,Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-        });
+        Intent msgIntent = new Intent(this, FavMoviesIntentService.class);
+        msgIntent.putExtra(FavMoviesIntentService.PARAM_IN_MSG, stringId);
+        startService(msgIntent);
     }
 
     private void getMovieVideos() {
@@ -438,5 +406,60 @@ public class DetailMovieActivity extends AppCompatActivity {
         getSupportLoaderManager().restartLoader(REVIEWS_SEARCH_LOADER, null, reviewsLoader);
         getSupportLoaderManager().restartLoader(VIDEOS_SEARCH_LOADER, null, videosLoader);
         super.onResume();
+    }
+
+    public class ResponseReceiver extends BroadcastReceiver {
+        public static final String ACTION_RESP =
+                "com.udacity.yordan.popularmovies.intent.action.MESSAGE_PROCESSED";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String stringId = movieId.toString();
+            final Uri uri = FavoriteMoviesContract.FavoriteEntry.CONTENT_URI.buildUpon().appendPath(stringId).build();
+            isFav = intent.getBooleanExtra(FavMoviesIntentService.PARAM_OUT_MSG,false);
+            //If movie is marked as favorite
+            if(isFav){
+                //Favorite image as default
+                mIvFavorite.setImageResource(R.drawable.ic_favorite_white_24dp);
+            }
+            //If not...
+            else {
+                //Unfavorite image as default
+                mIvFavorite.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+            }
+
+            mIvFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isFav){
+                        getContentResolver().delete(uri
+                                ,null
+                                ,null);
+                        mIvFavorite.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+                        isFav = false;
+                    }
+                    else {
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(FavoriteMoviesContract.FavoriteEntry.COLUMN_MOVIE_ID, movieId);
+                        contentValues.put(FavoriteMoviesContract.FavoriteEntry.COLUMN_TITLE, mMovieTitle.getText().toString());
+
+                        Uri uri = getContentResolver().insert(FavoriteMoviesContract.FavoriteEntry.CONTENT_URI, contentValues);
+
+                        if(uri != null) {
+                            mIvFavorite.setImageResource(R.drawable.ic_favorite_white_24dp);
+                            Toast.makeText(DetailMovieActivity.this
+                                    ,getString(R.string.confirmation_movie_added_fav)
+                                    ,Toast.LENGTH_LONG).show();
+                            isFav = true;
+                        }
+                        else {
+                            Toast.makeText(DetailMovieActivity.this
+                                    ,getString(R.string.message_error_add_fav)
+                                    ,Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            });
+        }
     }
 }
