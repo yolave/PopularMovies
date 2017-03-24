@@ -21,7 +21,11 @@ import java.util.Scanner;
 /**
  * These utilities will be used to communicate with the network.
  */
-public class NetworkUtils {
+public final class NetworkUtils {
+    /**
+     * Unused constructor
+     */
+    private NetworkUtils(){}
     /**
      * Base URL to connect to themoviedb.org
      */
