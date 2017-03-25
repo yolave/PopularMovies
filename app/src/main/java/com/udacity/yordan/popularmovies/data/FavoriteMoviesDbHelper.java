@@ -32,7 +32,13 @@ public class FavoriteMoviesDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + FavoriteMoviesContract.FavoriteEntry.TABLE_NAME);
-        onCreate(db);
+        /*
+         * Commented because there are not reason (at this moment) to upgrade the database. However, if at some point
+         * of the development this action is required, let's follow this steps:
+         * 1.- Check the old db version against the new one
+         * 2.- If the old version is lower than the new one, so apply the changes (DROP, UPDATE, ALTER, etc)
+         */
+//        db.execSQL("DROP TABLE IF EXISTS " + FavoriteMoviesContract.FavoriteEntry.TABLE_NAME);
+//        onCreate(db);
     }
 }
