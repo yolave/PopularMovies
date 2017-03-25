@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -53,18 +54,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.tv_no_movies)
     TextView mTvNoMovies;
 
+    private RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(MainActivity.this, SPAN_COUNT);
     private static final int MOVIES_LOADER = 111;
     private LoaderManager.LoaderCallbacks<RecyclerView.Adapter> moviesLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState != null){
-            selectedItem = savedInstanceState.getInt(getString(R.string.SELECTED_OPTION_KEY));
-        }
         Thread.setDefaultUncaughtExceptionHandler(new PopularMoviesExceptionHandler(this));
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        if(savedInstanceState != null){
+            selectedItem = savedInstanceState.getInt(getString(R.string.SELECTED_OPTION_KEY));
+
+            Parcelable mRecyclerViewState = savedInstanceState.getParcelable(getString(R.string.RECYCLER_VIEW_STATE));
+            mLayoutManager.onRestoreInstanceState(mRecyclerViewState);
+        }
         mReloadButton.setOnClickListener(this);
         performMovieFetch(POPULAR_MOVIES_OPTION);
     }
@@ -156,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 hideLoading();
                 if(data.getItemCount() > 0) {
                     mMovieList.setAdapter(data);
-                    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(MainActivity.this, SPAN_COUNT);
                     mMovieList.setLayoutManager(mLayoutManager);
                     showResults();
                 }
@@ -275,11 +279,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Bundle bundle = new Bundle();
         bundle.putInt(getString(R.string.SELECTED_OPTION_KEY), selectedItem);
         getSupportLoaderManager().restartLoader(MOVIES_LOADER, bundle, moviesLoader);
-
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(getString(R.string.RECYCLER_VIEW_STATE),mLayoutManager.onSaveInstanceState());
         outState.putInt(getString(R.string.SELECTED_OPTION_KEY),selectedItem);
         super.onSaveInstanceState(outState);
     }

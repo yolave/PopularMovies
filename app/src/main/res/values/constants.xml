@@ -2,4 +2,5 @@
 <resources>
     <string name="MOVIE_ID_TAG" translatable="false">movieId</string>
     <string name="SELECTED_OPTION_KEY" translatable="false">selectedOption</string>
+    <string name="RECYCLER_VIEW_STATE" translatable="false">recyclerViewState</string>
 </resources>
